@@ -1,13 +1,23 @@
 <template>
-  <div class="buttons">
-    <button class="button is-primary">Primary</button>
-    <button class="button is-link">Link</button>
-  </div>
-
-  <div class="buttons">
-    <button class="button is-info">Info</button>
-    <button class="button is-success">Success</button>
-    <button class="button is-warning">Warning</button>
-    <button class="button is-danger">Danger</button>
-  </div>
+  <PageLogin v-if="!logado"/>
+  <PageHome v-else/>
 </template>
+
+<script>
+import PageLogin from './pages/PageLogin.vue';
+import PageHome from './pages/PageHome.vue';
+
+export default {
+  data() {
+    return {
+      logado: true
+    }
+  },
+  components: {
+    PageLogin,
+    PageHome
+  }
+}
+</script>
+
+<style></style>
