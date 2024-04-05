@@ -1,5 +1,5 @@
 <template>
-    <button :class="classeCss" @click="acao">
+    <button :class="'button ' + tipo" @click="acao">
         {{ text }}
     </button>
 </template>
@@ -7,14 +7,6 @@
 <script>
 // https://bulma.io/documentation/elements/button/
 export default {
-    data() {
-        return {
-            classeCss: 'button '
-        }
-    },
-    created() {
-        this.classeCss += this.tipo;
-    },
     props: {
         text: {
             type: String,

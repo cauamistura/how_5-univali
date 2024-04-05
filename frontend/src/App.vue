@@ -10,7 +10,7 @@ import PageHome from './pages/PageHome.vue';
 export default {
   data() {
     return {
-      logado: true
+      logado: false
     }
   },
   components: {
