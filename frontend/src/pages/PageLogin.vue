@@ -10,7 +10,7 @@
       </div>
       <div class="card-content">
         <p>Novo aqui?
-          <a href="">Crie sua conta</a>
+          <a href="/Login/CriarConta">Crie sua conta</a>
         </p>
       </div>
     </div>    

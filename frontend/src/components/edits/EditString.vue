@@ -1,10 +1,7 @@
 <template>
     <div class="field">
         <p class="control has-icons-left">
-            <input class="input" type="password" :placeholder="placeholder" v-model="model" />
-            <span class="icon is-small is-left">
-                <i class="fas fa-lock"></i>
-            </span>
+            <input class="input" :placeholder="placeholder" v-model="model" />
         </p>
     </div>
 </template>
@@ -23,7 +20,7 @@ export default {
         },
         placeholder: {
             type: String,
-            default: "Senha"
+            default: ""
         }
     },
     watch: {

@@ -1,12 +1,15 @@
 <template>
     <div>
-        <h1>Home Page</h1>
+        <h1>Cadastro Produto</h1>
     </div>
 </template>
 
 <script>
 export default {
+
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

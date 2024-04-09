@@ -1,11 +1,16 @@
 <template>
-  <PageLogin v-if="!logado"/>
-  <PageHome v-else/>
+  <div>
+    <!-- <PageLogin v-if="!logado"/> -->
+    <!-- <div v-else> -->
+      <menu-header />
+      <router-view />
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
-import PageLogin from './pages/PageLogin.vue';
-import PageHome from './pages/PageHome.vue';
+// import PageLogin from './pages/PageLogin.vue';
+import MenuHeader from './components/MenuHeader.vue';
 
 export default {
   data() {
@@ -14,9 +19,9 @@ export default {
     }
   },
   components: {
-    PageLogin,
-    PageHome
-  }
+    // PageLogin,
+    MenuHeader
+  },
 }
 </script>
 
