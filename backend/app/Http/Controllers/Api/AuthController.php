@@ -19,7 +19,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
             'description' => 'string',
             'seller' => 'boolean'
         ]);
@@ -52,8 +52,6 @@ class AuthController extends Controller
         // Valida os dados do formulário
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
             'description' => 'string',
             'seller' => 'boolean'
         ]);
@@ -64,8 +62,6 @@ class AuthController extends Controller
 
             // Atualiza os dados do usuário
             $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt($request->password); 
             $user->description = $request->description;
             $user->seller = $request->seller;  
             $user->save();
