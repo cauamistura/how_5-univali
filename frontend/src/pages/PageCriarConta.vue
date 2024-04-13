@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" />
+    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" :tipo="tipoAlerta"/>
 </template>
 
 <script>
@@ -43,6 +43,7 @@ export default {
             nome: "",
             setor: "",
             alerta: false,
+            tipoAlerta: "is-danger",
             alertaMensagem: ""
         }
     },
@@ -65,25 +66,28 @@ export default {
                 description: this.setor,
                 seller: false
             }).then(() => {
-                this.message = "Cadastro realizado com sucesso";
+                this.alertaMensagem = "Cadastro realizado com sucesso";
+                this.tipoAlerta = "is-success";
                 this.alerta = true;
 
                 setTimeout(() => {
-                    this.alerta = false;
                     window.location.href = "/";
                 }, 1000);
 
-            }).catch((error) => {
-                if (error.response.status == 422) {
-                    this.alertaMensagem = "Dados Invalidos";
-                } else {
-                    this.alertaMensagem = error.response.data.message;
-                }
+            }).catch(() => {
+                this.alertaMensagem = "Erro ao cadastrar, verifique os dados e tente novamente";
                 this.alerta = true;
-                setTimeout(() => {
-                    this.alerta = false;
-                }, 200);
             });
+        }
+    },
+    watch: {
+        alerta() {
+            if (this.alerta) {
+                setTimeout(() => {
+                    this.tipoAlerta = "is-danger";
+                    this.alerta = false;
+                }, 2000);
+            }
         }
     },
     components: {

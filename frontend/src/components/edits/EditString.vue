@@ -24,11 +24,18 @@ export default {
         placeholder: {
             type: String,
             default: ""
+        },
+        texto: {
+            type: String,
+            default: ""
         }
     },
     watch: {
         model() {
             this.preencheModel(this.model)    
+        },
+        texto() {
+            this.model = this.texto;
         }
     }
 }

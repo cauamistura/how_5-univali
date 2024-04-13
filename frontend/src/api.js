@@ -22,7 +22,7 @@ api.interceptors.response.use(
         // Redireciona o usuário para a página de login
         window.location.href = '/';
       }            
-      return(error);
+      return Promise.reject(error);
     }
 );
 
