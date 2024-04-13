@@ -1,5 +1,8 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import VueCookies from 'vue-cookies';
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import App from './App.vue';
 
 import Home from './pages/PageHome.vue';
@@ -52,4 +55,6 @@ const router = createRouter({
 
 const app = createApp(App); // Criar uma instância do aplicativo Vue
 app.use(router); // Usar o roteador Vue Router
+app.use(VueCookies); // Usar o VueCookies
+app.use(VueAxios, axios)  // Usar o VueAxios    
 app.mount('#app'); // Montar o aplicativo na div com o id "app"

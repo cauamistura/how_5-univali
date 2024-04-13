@@ -30,7 +30,7 @@
                         <i class="far fa-question-circle"></i>
                         <span>Sobre</span>
                     </a>
-                    <a href="/Login">
+                    <a href="" @click="logout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Sair</span>
                     </a>
@@ -47,11 +47,12 @@
 </template>
 
 <script>
-export default {
+import api from "../api.js";
+export default {    
     data() {
         return {
             user: {
-                name: 'Fulano de tal',
+                name: "Aguardando...",
             },
             SideBarVisible: false,
         }
@@ -62,7 +63,19 @@ export default {
         },
         checkScreenSize() {
             this.SideBarVisible = window.innerWidth >= 768 && this.SideBarVisible;
+        },
+        logout() {
+            api.post("/logout");
+            this.$cookies.remove('token');
+            window.location.href = '/login';
         }
+    },
+    mounted() {
+        api.get('/user-profile').then((response) => {            
+            this.user = response.data.userData;
+        }).catch((error) => {
+            console.log(error.response);
+        });        
     },
     created() {
         window.addEventListener('resize', this.checkScreenSize);

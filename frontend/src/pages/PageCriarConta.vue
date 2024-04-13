@@ -13,7 +13,7 @@
                     placeholder="Confirmar Senha" />
                 <edit-string class="edit" v-model="nome" :preencheModel="(setor) => this.setor = setor"
                     placeholder="Setor" />
-                <botao-basico :acao="logar" tipo="is-info" text="Cadastrar-se" class="bota-basico" />
+                <botao-basico :acao="Cadastrar" tipo="is-info" text="Cadastrar-se" class="bota-basico" />
             </div>
             <div class="card-content">
                 <p>Já tem conta?
@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <alerta-geral :visivel="alerta" />
+    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" />
 </template>
 
 <script>
@@ -32,6 +32,8 @@ import EditSenha from "../components/edits/EditSenha.vue";
 import EditString from "../components/edits/EditString.vue";
 import AlertaGeral from "../components/AlertaGeral.vue";
 
+import api from "../api.js";
+
 export default {
     data() {
         return {
@@ -40,14 +42,48 @@ export default {
             confirmarSenha: "",
             nome: "",
             setor: "",
-            alerta: false
+            alerta: false,
+            alertaMensagem: ""
         }
     },
     methods: {
-        logar() {
-            console.log(this.email, this.senha)
+        Cadastrar() {
+            if (this.senha != this.confirmarSenha) {
+                this.alertaMensagem = "As senhas não coincidem";
+                this.alerta = true;
 
-            this.alerta = !this.alerta
+                setTimeout(() => {
+                    this.alerta = false;
+                }, 2000);
+
+                return;
+            }
+            api.post("/register", {
+                email: this.email,
+                password: this.senha,
+                name: this.nome,
+                description: this.setor,
+                seller: false
+            }).then(() => {
+                this.message = "Cadastro realizado com sucesso";
+                this.alerta = true;
+
+                setTimeout(() => {
+                    this.alerta = false;
+                    window.location.href = "/";
+                }, 1000);
+
+            }).catch((error) => {
+                if (error.response.status == 422) {
+                    this.alertaMensagem = "Dados Invalidos";
+                } else {
+                    this.alertaMensagem = error.response.data.message;
+                }
+                this.alerta = true;
+                setTimeout(() => {
+                    this.alerta = false;
+                }, 200);
+            });
         }
     },
     components: {

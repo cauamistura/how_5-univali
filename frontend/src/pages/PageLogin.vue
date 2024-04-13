@@ -15,7 +15,7 @@
       </div>
     </div>    
   </div>
-  <alerta-geral :visivel="alerta"/>
+  <alerta-geral :visivel="alerta" :mensagem="alertaMensagem"/>
 </template>
 
 <script>
@@ -24,19 +24,15 @@ import EditEmail from "../components/edits/EditEmail.vue";
 import EditSenha from "../components/edits/EditSenha.vue";
 import AlertaGeral from "../components/AlertaGeral.vue";
 
+import api from "../api.js";
+
 export default {
   data() {
     return {
       email: "",
       senha: "",
-      alerta: false
-    }
-  },
-  methods: {
-    logar() {
-      console.log(this.email, this.senha)
-
-      this.alerta = !this.alerta
+      alerta: false,
+      alertaMensagem: ""
     }
   },
   components: {
@@ -44,6 +40,27 @@ export default {
     EditSenha,
     BotaoBasico,
     AlertaGeral
+  },
+  methods: {
+    logar() {
+      api.post("/login", {
+        email: this.email,
+        password: this.senha
+      }).then((response) => {        
+        this.$cookies.set("token", response.data.token);
+        window.location.href = "/";
+      }).catch((error) => {        
+        if (error.response.status == 422) {
+          this.alertaMensagem = "Email ou senha inválidos";
+        } else {
+          this.alertaMensagem = error.response.data.message;
+        }
+        this.alerta = true;        
+        setTimeout(() => {
+          this.alerta = false;
+        }, 2000);
+      });
+    }
   }
 }
 </script>
