@@ -71,8 +71,8 @@ export default {
         }
     },
     mounted() {
-        api.get('/user-profile').then((response) => {            
-            this.user = response.data.userData;
+        api.get('/user-profile').then((response) => {                   
+            this.user = response.data.user;
         }).catch((error) => {
             console.log(error.response);
         });        
@@ -101,14 +101,16 @@ nav {
 }
 
 .sidebar {
-    position: fixed;
+    position: absolute;
     width: 240px;
     height: 100%;
     background: #F6F8F9;
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 999;
 }
+
 
 .logo {
     font-size: 18px;
