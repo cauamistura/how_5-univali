@@ -13,9 +13,9 @@
           <a href="/Login/CriarConta">Crie sua conta</a>
         </p>
       </div>
-    </div>    
+    </div>
   </div>
-  <alerta-geral :visivel="alerta" :mensagem="alertaMensagem"/>
+  <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" />
 </template>
 
 <script>
@@ -46,16 +46,16 @@ export default {
       api.post("/login", {
         email: this.email,
         password: this.senha
-      }).then((response) => {        
+      }).then((response) => {
         this.$cookies.set("token", response.data.token);
         window.location.href = "/";
-      }).catch((error) => {        
+      }).catch((error) => {
         if (error.response.status == 422) {
           this.alertaMensagem = "Email ou senha inválidos";
         } else {
           this.alertaMensagem = error.response.data.message;
         }
-        this.alerta = true;        
+        this.alerta = true;
         setTimeout(() => {
           this.alerta = false;
         }, 2000);
