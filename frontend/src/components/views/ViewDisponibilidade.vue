@@ -1,9 +1,14 @@
 <template>
-    <div class="disponivel">
+    <div :class="{
+        'container-disponibilidade': true,
+        'disponivel': this.disponivel,
+        'indisponivel': !this.disponivel,
+        'centralizar-disponiblidade': !this.mostrarLegenda
+    }">
         <span class="icon is-small is-right">
-            <i class="fa fa-check"></i>
+            <i :class="this.disponivel ? 'fa fa-check' : 'fa fa-times'"></i>
         </span>
-        <span v-if="mostrarLegenda">Disponivel</span>
+        <span v-if="mostrarLegenda">{{ this.disponivel ? 'Disponível' : 'Indisponível' }}</span>
     </div>
 </template>
 
@@ -11,13 +16,19 @@
 export default {
     data() {
         return {
-            mostrarLegenda: true
+            mostrarLegenda: true,
+        }
+    },
+    props: {
+        disponivel: {
+            type: Boolean,
+            default: true
         }
     },
     methods: {
         verificarTela() {
             this.mostrarLegenda = window.innerWidth >= 1000;
-        },
+        }
     },
     created() {
         window.addEventListener('resize', this.verificarTela);
@@ -30,17 +41,26 @@ export default {
 </script>
 
 <style>
-.disponivel {
+.container-disponibilidade {
     border-radius: 5px;
     width: 100%;
-    background-color: #EBFFF1;
-    color: green;
     padding: 5px;
     font-size: 10px;
 }
 
-.disponivel span {
-    margin: 4px;
-    overflow: hidden;
+.disponivel {
+    background-color: #EBFFF1;
+    color: green;
+}
+
+.indisponivel {
+    background-color: #fab0b3;
+    color: rgb(249, 0, 0);
+}
+
+.centralizar-disponiblidade {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

@@ -4,15 +4,15 @@
       <view-imagem-tabela />
     </td>
     <td class="td-50px">
-      <view-disponibilidade />
+      <view-disponibilidade :disponivel="produto.available" />
     </td>
     <td>{{ this.produto.name }}</td>
-    <td>{{ this.produto.price }}</td>
+    <td>{{ PrecoFormatado }}</td>
     <td>
       <edit-numero />
     </td>
     <td class="td-50px">
-      <botao-basico class="botao-td" text="Adicionar" tipo="is-link"/>
+      <botao-basico class="botao-td" text="Adicionar" tipo="is-link" />
     </td>
   </tr>
 </template>
@@ -34,6 +34,11 @@ export default {
     produto: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    PrecoFormatado() {
+      return this.produto.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
   }
 }
