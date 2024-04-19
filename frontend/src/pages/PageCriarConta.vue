@@ -30,7 +30,7 @@ import BotaoBasico from "../components/botao/BotaoBasico.vue";
 import EditEmail from "../components/edits/EditEmail.vue";
 import EditSenha from "../components/edits/EditSenha.vue";
 import EditString from "../components/edits/EditString.vue";
-import AlertaGeral from "../components/AlertaGeral.vue";
+import AlertaGeral from "../components/views/ViewAlertaGeral.vue";
 
 import api from "../api.js";
 

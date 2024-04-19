@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         verificarTela() {
-            this.mostrarLegenda = window.innerWidth >= 1000;
+            this.mostrarLegenda = window.innerWidth >= 768;
         }
     },
     created() {

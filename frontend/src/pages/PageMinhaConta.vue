@@ -21,7 +21,7 @@ import api from "../api.js";
 import EditEmail from '@/components/edits/EditEmail.vue';
 import EditString from '@/components/edits/EditString.vue';
 import BotaoBasico from '@/components/botao/BotaoBasico.vue';
-import AlertaGeral from '@/components/AlertaGeral.vue';
+import AlertaGeral from "@/components/views/ViewAlertaGeral.vue";
 
 export default {
     data() {

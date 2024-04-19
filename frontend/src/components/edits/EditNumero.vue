@@ -83,4 +83,14 @@ input[type=number]::-webkit-outer-spin-button {
     width: 50px;
     font-size: 12px;
 }
+
+@media(max-width : 768px) {
+    .number-input button {
+        width: 15px;
+    }
+
+    .number-input input[type=number] {
+        width: 30px;
+    }
+}
 </style>
