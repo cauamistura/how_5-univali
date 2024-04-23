@@ -4,8 +4,8 @@
       <div class="card-image">
         <h1 class="title">Entrar</h1>
         <h1 class="subtitle">Entre usando seus dados</h1>
-        <edit-email v-model="email" :preencheModel="(email) => this.email = email" />
-        <edit-senha class="edit-senha" v-model="senha" :preencheModel="(senha) => this.senha = senha" />
+        <edit-email class="edit-login" model="email" :preencheModel="(email) => this.email = email" />
+        <edit-senha class="edit-login" model="senha" :preencheModel="(senha) => this.senha = senha" />
         <botao-basico :acao="logar" tipo="is-info" text="Logar" class="bota-basico" />
       </div>
       <div class="card-content">
@@ -53,7 +53,7 @@ export default {
         if (error.response.status == 422) {
           this.alertaMensagem = "Email ou senha inválidos";
         } else {
-          this.alertaMensagem = error.response.data.message;
+          this.alertaMensagem = error.response.data.error;
         }
         this.alerta = true;
         setTimeout(() => {
@@ -84,7 +84,7 @@ export default {
   align-items: center;
 }
 
-.edit-senha {
+.edit-login {
   width: 100%;
 }
 

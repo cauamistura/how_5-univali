@@ -1,17 +1,18 @@
 <template>
-    <div>
-        <div class="columns is-centered">
-            <div class="column is-6">
-                <edit-string placeholder="Nome" :texto="user.name" :preencheModel="(nome) => this.user.name = nome"/>
-                <edit-email :somenteleitura="true" :texto="user.email" />
-                <edit-string placeholder="Setor" :texto="user.description" :preencheModel="(description) => this.user.description = description"/>
-                <div class="botoes">
-                    <botao-basico text="Confirmar" :acao="Confirmar"/>
-                    <botao-basico text="Cancelar" tipo="is-danger" :acao="Cancelar"/>
-                </div>
-            </div>
+    <div class="container-pai">
+        <div class="form">
+            <edit-string placeholder="Nome" :texto="user.name" :preencheModel="(nome) => this.user.name = nome" />
+            <edit-email :somenteleitura="true" :texto="user.email" />
+            <edit-string placeholder="Setor" :texto="user.description"
+                :preencheModel="(description) => this.user.description = description" />
+
+        </div>
+        <div class="botoes">
+            <botao-basico text="Confirmar" :acao="Confirmar" />
+            <botao-basico text="Cancelar" tipo="is-danger" :acao="Cancelar" />
         </div>
     </div>
+
     <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" :tipo="tipoAlerta" />
 </template>
 
@@ -58,7 +59,7 @@ export default {
             }).then(() => {
                 this.MostrarAlerta("Perfil do usuário atualizado com sucesso", "is-success");
             }).catch(() => {
-                this.MostrarAlerta("Erro ao atualizar perfil do usuário", "is-danger"); 
+                this.MostrarAlerta("Erro ao atualizar perfil do usuário", "is-danger");
             });
         },
         Cancelar() {
@@ -80,10 +81,6 @@ export default {
 </script>
 
 <style>
-.columns {
-    margin: auto;
-}
-
 .botoes {
     display: flex;
     justify-content: right;
@@ -91,6 +88,6 @@ export default {
 }
 
 .botoes button {
-    margin-left: 10px;
+    margin: 10px
 }
 </style>

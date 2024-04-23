@@ -4,12 +4,10 @@
             <div class="card-image">
                 <h1 class="title">Cadastrar-se</h1>
                 <h1 class="subtitle">Cadastrar-se usando seus dados</h1>
-                <edit-string class="edit" v-model="nome" :preencheModel="(nome) => this.nome = nome"
-                    placeholder="Nome" />
-                <edit-email class="edit" v-model="email" :preencheModel="(email) => this.email = email" />
-                <edit-senha class="edit" v-model="senha" :preencheModel="(senha) => this.senha = senha" />
-                <edit-senha class="edit" v-model="senha"
-                    :preencheModel="(confirmarSenha) => this.confirmarSenha = confirmarSenha"
+                <edit-string class="edit" :preencheModel="(nome) => this.nome = nome" placeholder="Nome" />
+                <edit-email class="edit" :preencheModel="(email) => this.email = email" />
+                <edit-senha class="edit" :preencheModel="(senha) => this.senha = senha" />
+                <edit-senha class="edit" :preencheModel="(confirmarSenha) => this.confirmarSenha = confirmarSenha"
                     placeholder="Confirmar Senha" />
                 <edit-string class="edit" v-model="nome" :preencheModel="(setor) => this.setor = setor"
                     placeholder="Setor" />
@@ -22,7 +20,7 @@
             </div>
         </div>
     </div>
-    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" :tipo="tipoAlerta"/>
+    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" :tipo="tipoAlerta" />
 </template>
 
 <script>

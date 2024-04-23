@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="!logado">
-      <PageLogin v-if="temConta"/> 
-      <PageCriarConta v-else/>  
-    </div>     
+      <PageLogin v-if="temConta" />
+      <PageCriarConta v-else />
+    </div>
     <div v-else>
       <menu-header />
-      <router-view />
+      <router-view class="container-pai" />
     </div>
   </div>
 </template>
@@ -20,7 +20,8 @@ export default {
   data() {
     return {
       logado: false,
-      temConta: false
+      temConta: false,
+      isLoading: false,
     }
   },
   components: {
@@ -28,15 +29,34 @@ export default {
     MenuHeader,
     PageCriarConta
   },
-  mounted() {    
+  mounted() {
     // Verificar se há um token nos cookies
     const token = this.$cookies.get('token');
-    this.logado = token ? true : false;    
+    this.logado = token ? true : false;
     if (!this.logado) {
       this.temConta = !window.location.href.includes('Login/CriarConta');
     }
-  }
+  },
 }
 </script>
 
-<style></style>
+<style>
+.container-pai {
+  margin: 10px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.form {
+  padding: 10px 10px 0px 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}
+
+@media(max-width : 768px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
