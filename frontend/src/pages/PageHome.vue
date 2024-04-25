@@ -9,7 +9,7 @@
                 <li :class="{ 'is-active': activeTab === Tab.Todos }" @click="changeTab(Tab.Todos)"><a>Todos</a></li>
             </ul>
         </div>
-        <grid-home-produtos :filtro="activeTab" />
+        <grid-home-produtos :filtro="activeTab" :dados="this.produtos"/>
     </div>
 </template>
 
@@ -28,7 +28,8 @@ export default {
     },
     data() {
         return {
-            activeTab: Tab.Disponivel
+            activeTab: Tab.Disponivel,
+            produtos: []
         };
     },
     methods: {
