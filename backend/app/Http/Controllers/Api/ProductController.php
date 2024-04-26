@@ -13,23 +13,33 @@ class ProductController extends Controller
 {
     public function index()
     {
-
         $produtos = Product::all();
         return response()->json([
             "Produto" => $produtos
         ]);
     }
 
-    public function show($id) 
+    public function show($id)
     {
         try {
             $produto = Product::findOrFail($id);
             return response()->json(["Produto" => $produto]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage('Não foi possivel encontrar esse produto')], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    
+
+    public function getProductsByUser()
+    {
+        try {
+            $user = Auth::user();
+            $produtos = Product::where('vendedor_id', $user->id)->get();
+            return response()->json(["Produto" => $produtos]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function create(Request $request)
     {
         // Valida os dados do formulário
@@ -74,17 +84,16 @@ class ProductController extends Controller
             'ativo' => 'required|boolean|',
             'vendedor_id' => 'required|integer|vendedor_id|unique:products|'
         ]);
-    
+
         try {
+            $product = Product::findOrFail($id);
             // Obtém o usuário autenticado
             $authenticatedUser = Auth::user();
-    
+
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($authenticatedUser->id != $id) {
+            if ($authenticatedUser->id != $product->vendedor_id) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
-
-            $product = Product::findOrFail($id);
 
             $product->name = $request->name;
             $product->preco = $request->preco;
@@ -93,31 +102,31 @@ class ProductController extends Controller
             $product->vendedor_id = $request->vendedor_id;
             $product->updated_a = now();
             $product->save();
-    
+
             return response()->json(['message' => 'Produto atualizado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage('Não foi possivel atualizar o produto')], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function delete($id) 
+    public function delete($id)
     {
         try {
 
             $produto = Product::findOrFail($id);
 
             $authenticatedUser = Auth::user();
-        
+
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($authenticatedUser->id != $produto.vendedor_id) {
+            if ($authenticatedUser->id != $produto->vendedor_id) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
-            
+
             $produto->delete();
 
             return response()->json(['message' => 'Produto deletado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage('Não foi possivel deletar o produto')], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
