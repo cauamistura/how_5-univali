@@ -47,11 +47,12 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'preco' => 'required|numeric', // Use 'numeric' em vez de 'float'
             'src' => 'required|string',
-            'ativo' => 'required|boolean',
-            'vendedor_id' => 'required|integer|unique:products', // Correção aqui
+            'ativo' => 'required|boolean',            
         ]);
 
         try {
+            $user = Auth::user();
+
             // Inicia uma transação
             DB::beginTransaction();
 
@@ -61,7 +62,7 @@ class ProductController extends Controller
                 'preco' => $request->preco,
                 'src' => $request->src,
                 'ativo' => $request->ativo,
-                'vendedor_id' => $request->vendedor_id,
+                'vendedor_id' => $user->id,
                 'created_at' => now(),
             ]);
 
@@ -99,7 +100,7 @@ class ProductController extends Controller
             $product->preco = $request->preco;
             $product->src = $request->src;
             $product->ativo = $request->ativo;
-            $product->vendedor_id = $request->vendedor_id;
+            $product->vendedor_id = $authenticatedUser->id;
             $product->updated_a = now();
             $product->save();
 
