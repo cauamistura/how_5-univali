@@ -35,7 +35,7 @@ export default {
             this.preencheModel(this.model)    
         },
         texto() {
-            this.model = this.texto;
+            this.model = this.texto;                        
         }
     }
 }

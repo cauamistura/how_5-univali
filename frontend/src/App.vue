@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <menu-header />
-      <router-view class="container-pai" />
+      <router-view />
     </div>
   </div>
 </template>

@@ -1,33 +1,7 @@
 <template>
-    <div class="card">
-        <div class="card-image">
-            <figure class="image is-4by3">
-                <img src="https://bulma.io/assets/images/placeholders/1280x960.png" alt="Placeholder image" />
-            </figure>
-        </div>
-        <div class="card-content">
-            <div class="media">
-                <div class="media-left">
-                    <figure class="image is-48x48">
-                        <img src="https://bulma.io/assets/images/placeholders/96x96.png" alt="Placeholder image" />
-                    </figure>
-                </div>
-                <div class="media-content">
-                    <p class="title is-4">John Smith</p>
-                    <p class="subtitle is-6">@johnsmith</p>
-                </div>
-            </div>
-
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec
-                iaculis mauris. <a>@bulmaio</a>. <a href="#">#css</a>
-                <a href="#">#responsive</a>
-                <br />
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-            </div>
-        </div>
-    </div>
+//
 </template>
+
 
 <script>
 export default {
@@ -35,4 +9,101 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+/* MODAL */
+
+.modal::before {
+    content: "";
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, .5);
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 80px;
+}
+
+.modal_container {
+    position: relative;
+    background: linear-gradient(to right, transparent 250px, white 250px);
+    z-index: 1;
+    display: grid;
+    align-items: end;
+    grid-gap: 50px;
+    padding: 50px 50px 50px 0;
+    animation: fadeIn .3s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(50px, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0px, 0, 0);
+    }
+}
+
+.modal_fechar {
+    border-radius: 50%;
+    border: 2px solid #000;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1rem;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, .1), 0px 4px 10px rgba(0, 0, 0, .2);
+    cursor: pointer;
+}
+
+.modal_img {
+    grid-column: 1;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, .1), 0px 4px 10px rgba(0, 0, 0, .2);
+}
+
+.modal_img img {
+    max-width: 300px;
+    display: block;
+}
+
+.modal_dados {
+    grid-column: 2;
+    max-width: 600px;
+}
+
+.modal_titulo {
+    font-size: 3rem;
+}
+
+.modal_btn {
+    margin-top: 80px;
+    background: #000;
+    cursor: pointer;
+    color: #ffffff;
+    border: none;
+    font-size: 1rem;
+    padding: 10px 25px;
+    font-family: "Noto Serif";
+}
+
+.modal_btn.esgotado {
+    background: #808080;
+}
+
+.modal_btn:active {
+    background: #808080;
+}
+</style>
