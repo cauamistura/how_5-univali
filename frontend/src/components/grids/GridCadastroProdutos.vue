@@ -19,13 +19,16 @@
                     <view-disponibilidade :disponivel="produto.available" />
                 </td>
                 <td>{{ produto.name }}</td>
-                <td>{{ PrecoFormatado(produto.price) }}</td>
+                <td>{{ numeroPreco(produto.preco) }}</td>
                 <td class="td-50px">
-                    <botao-basico class="botao-td" :text="this.apenasSimbolo ? 'Editar' : '✏️'" tipo="is-warning" />
+                    <botao-basico class="botao-td" :text="this.apenasSimbolo ? 'Editar' : '✏️'" tipo="is-warning"
+                        @click="selecionar(produto)" />
                 </td>
                 <td class="td-50px">
-                    <botao-basico class="botao-td" :text="this.apenasSimbolo ? 'Excluir' : '🗑'" tipo="is-danger" />
+                    <botao-basico class="botao-td" :text="this.apenasSimbolo ? 'Excluir' : '🗑'" tipo="is-danger"
+                        @click="exluir(produto)" />
                 </td>
+
             </tr>
         </tbody>
     </table>
@@ -42,52 +45,34 @@ export default {
         BotaoBasico,
         ViewDisponibilidade
     },
+    props: {
+        produtos: {
+            type: Array,
+            required: true
+        },
+        selecionar: {
+            type: Function,
+            default: () => {}
+        },
+        exluir: {
+            type: Function,
+            default: () => {}
+        }
+    },
     data() {
         return {
             apenasSimbolo: false,
-            produtos: [
-                {
-                    id: 1,
-                    name: "Coxinha",
-                    price: 5.00,
-                    available: false,
-                    user: {
-                        id: 1,
-                        name: "João",
-                        description: "Vendedor"
-                    }
-                },
-                {
-                    id: 2,
-                    name: "Pastel",
-                    price: 3.00,
-                    available: true,
-                    user: {
-                        id: 2,
-                        name: "Maria",
-                        description: "Vendedora"
-                    }
-                },
-                {
-                    id: 3,
-                    name: "Pão de queijo",
-                    price: 2.00,
-                    available: true,
-                    user: {
-                        id: 3,
-                        name: "José",
-                        description: "Vendedor"
-                    }
-                }
-            ]
         }
     },
     methods: {
-        PrecoFormatado(value) {
-            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        },
         verificarTela() {
             this.apenasSimbolo = window.innerWidth >= 768;
+        },
+        numeroPreco(valor) {
+            if (!valor) {
+                return "R$ 0,00";
+            }
+            return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
         }
     },
     created() {
@@ -96,7 +81,7 @@ export default {
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.verificarTela);
-    },
+    }
 }
 </script>
 

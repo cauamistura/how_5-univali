@@ -1,5 +1,5 @@
 <template>
-    <div class="container-home">
+    <div class="container-home container-pai">
         <div class="tabs is-small">
             <ul>
                 <li :class="{ 'is-active': activeTab === Tab.Disponivel }" @click="changeTab(Tab.Disponivel)">

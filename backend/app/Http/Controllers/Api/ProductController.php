@@ -65,8 +65,6 @@ class ProductController extends Controller
         $this->updateFile($request->hasFile('image'));
   
         try {
-            $user = Auth::user();
-
             // Inicia uma transação
             DB::beginTransaction();
             

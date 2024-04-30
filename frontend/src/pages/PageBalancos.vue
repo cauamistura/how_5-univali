@@ -1,5 +1,5 @@
 <template>
-    <div class="form">
+    <div class="form container-pai">
         <div class="edits-data">
             <edit-data label="Data inicial" class="edit-balanco" />
             <edit-data label="Data Final" class="edit-balanco" />
