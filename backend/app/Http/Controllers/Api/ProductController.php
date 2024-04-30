@@ -11,19 +11,32 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
-    public function index()
+    protected $produto, $current_user, $fileName;
+
+    # Antes de toda a função é difinido quem é o current_user e antes todas as funções menos INDEX/CREATE é feito um find em Products 
+    public function __construct()
     {
-        $produtos = Product::all();
+        $this->middleware(function ($request, $next) {
+            $this->current_user = Auth::user();
+            if (!in_array($request->route()->getName(), ['product.index', 'product.create'])) {
+                $this->produto = Product::find(request()->route('id'));
+            }
+            return $next($request);
+        });
+    }
+
+    public function index(Request $request)
+    {
+        $produtos = Product::with('vendedor')->byActive($request->ativo)->get();
         return response()->json([
             "Produto" => $produtos
         ]);
     }
 
-    public function show($id)
+    public function show()
     {
         try {
-            $produto = Product::findOrFail($id);
-            return response()->json(["Produto" => $produto]);
+            return response()->json(["Produto" => $this->produto]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -32,8 +45,7 @@ class ProductController extends Controller
     public function getProductsByUser()
     {
         try {
-            $user = Auth::user();
-            $produtos = Product::where('vendedor_id', $user->id)->get();
+            $produtos = Product::byUser($this->current_user->id)->get();
             return response()->json(["Produto" => $produtos]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -45,23 +57,26 @@ class ProductController extends Controller
         // Valida os dados do formulário
         $request->validate([
             'name' => 'required|string|max:255',
-            'preco' => 'required|numeric', // Use 'numeric' em vez de 'float'
+            'preco' => 'required|numeric',
             'src' => 'required|string',
-            'ativo' => 'required|boolean',
-            'vendedor_id' => 'required|integer|unique:products', // Correção aqui
+            'ativo' => 'required|boolean'
         ]);
 
+        $this->updateFile($request->hasFile('image'));
+  
         try {
+            $user = Auth::user();
+
             // Inicia uma transação
             DB::beginTransaction();
-
+            
             // Insere o novo produto na tabela 'products' (não 'Products')
             DB::table('products')->insert([
                 'name' => $request->name,
                 'preco' => $request->preco,
-                'src' => $request->src,
+                'src' => $this->fileName,
                 'ativo' => $request->ativo,
-                'vendedor_id' => $request->vendedor_id,
+                'vendedor_id' => $this->current_user->id,
                 'created_at' => now(),
             ]);
 
@@ -74,34 +89,30 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         // Valida os dados do formulário
         $request->validate([
-            'name' => 'required|string|max:255',
-            'preco' => 'required|numeric',
-            'src' => 'required|string|',
-            'ativo' => 'required|boolean|',
-            'vendedor_id' => 'required|integer|vendedor_id|unique:products|'
+            'name' => 'string|max:255',
+            'preco' => 'numeric',
+            'ativo' => 'boolean',
         ]);
 
-        try {
-            $product = Product::findOrFail($id);
-            // Obtém o usuário autenticado
-            $authenticatedUser = Auth::user();
+        $this->updateFile($request->hasFile('image'));
 
+        try {
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($authenticatedUser->id != $product->vendedor_id) {
+            if ($this->current_user->id != $this->produto->vendedor_id) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
 
-            $product->name = $request->name;
-            $product->preco = $request->preco;
-            $product->src = $request->src;
-            $product->ativo = $request->ativo;
-            $product->vendedor_id = $request->vendedor_id;
-            $product->updated_a = now();
-            $product->save();
+            $this->produto->name = $request->name;
+            $this->produto->preco = $request->preco;
+            $this->produto->src = $this->fileName;
+            $this->produto->ativo = $request->ativo;
+            $this->produto->vendedor_id = $this->current_user->id;
+            $this->produto->updated_at = now();
+            $this->produto->save();
 
             return response()->json(['message' => 'Produto atualizado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
@@ -109,20 +120,15 @@ class ProductController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
         try {
-
-            $produto = Product::findOrFail($id);
-
-            $authenticatedUser = Auth::user();
-
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($authenticatedUser->id != $produto->vendedor_id) {
+            if ($this->current_user->id != $this->produto->vendedor_id) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
 
-            $produto->delete();
+            $this->produto->delete();
 
             return response()->json(['message' => 'Produto deletado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
@@ -130,4 +136,14 @@ class ProductController extends Controller
         }
     }
 
+    private function updateFile($image)
+    {
+        if ($image) {
+            $file = $image;
+            $this->fileName = md5(time()) . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/images'), $this->fileName);
+        } else {
+            $this->fileName = 'default-image.png';
+        }
+    }
 }
