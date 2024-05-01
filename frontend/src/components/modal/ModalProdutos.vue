@@ -9,8 +9,7 @@
                     :preencheModel="(value) => { this.produtoModal.preco = Number(value); }" />
                 <check-box label="Disponivel" :valor="this.produto.ativo ? true : false"
                     @checkbox-mudou="(ativo) => { this.produtoModal.ativo = ativo }" />
-                <edit-src TextoBotao="Imagem" @arquivo-selecionado="(src) => { this.produtoModal.src = src }"
-                    :arquivo-inicial="null" />
+                <edit-src @arquivo-selecionado="atualizarModelo" />
                 <div class="botoes">
                     <botao-basico text="Confirmar" :acao="confirmar" />
                     <botao-basico text="Cancelar" tipo="is-danger" :acao="() => { this.fechar() }" />
@@ -54,7 +53,8 @@ export default {
             produtoModal: {},
             menssagemAlerta: '',
             tipoAlerta: 'is-success',
-            exibirAlerta: false
+            exibirAlerta: false,
+            src: ''
         }
     },
     watch: {
@@ -77,10 +77,10 @@ export default {
             if (this.produtoModal.preco === undefined) {
                 this.produtoModal.preco = 0;
             }
-     
+
             if (this.produtoModal.id) {
                 api.put(`/products/${this.produtoModal.id}`, this.produtoModal)
-                    .then(() => {                        
+                    .then(() => {
                         this.mostrarAlerta('Produto atualizado com sucesso', 'is-success');
                     })
                     .catch(() => {
@@ -108,6 +108,9 @@ export default {
                 if (fechar)
                     this.fechar();
             }, 1500);
+        },
+        atualizarModelo(file) {
+            this.produtoModal.src = URL.createObjectURL(file);
         }
     }
 }
@@ -237,5 +240,4 @@ export default {
 .modal_btn:active {
     background: #808080;
 }
-
 </style>
