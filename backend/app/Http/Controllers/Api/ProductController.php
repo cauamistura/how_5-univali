@@ -57,8 +57,7 @@ class ProductController extends Controller
         // Valida os dados do formulário
         $request->validate([
             'name' => 'required|string|max:255',
-            'preco' => 'required|numeric',
-            'src' => 'required|string',
+            'preco' => 'required|numeric',            
             'ativo' => 'required|boolean'
         ]);
 
