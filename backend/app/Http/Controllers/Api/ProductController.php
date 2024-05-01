@@ -27,7 +27,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $produtos = Product::with('vendedor')->byActive($request->ativo)->get();
+        $produtos = Product::with('vendedor')->byActive(true)->get();
         return response()->json([
             "Produto" => $produtos
         ]);

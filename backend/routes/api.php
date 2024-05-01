@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,12 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::delete('products/{id}', [ProductController::class, 'delete']);
     Route::post('products/', [ProductController::class, 'create']);
     Route::get('products/', [ProductController::class, 'index']);
+
+    //Rota para pedidos
+    Route::post('orders/', [OrderController::class, 'create']);
+
+    //Rotas para balanco
+    Route::post('balanco/', [OrderController::class, 'balanco']);
 });
 
 Route::get('users', [AuthController::class, 'allUsers']);
