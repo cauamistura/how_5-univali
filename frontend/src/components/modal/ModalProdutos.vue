@@ -5,18 +5,20 @@
                 <button @click="fechar" class="modal_fechar">X</button>
                 <edit-string placeholder="Nome" :texto="this.produto.name"
                     :preencheModel="(nome) => { this.produtoModal.name = nome }" />
-                <edit-value placeholder="Preço" :texto="this.produto.preco"
-                    :preencheModel="(value) => { this.produtoModal.preco = Number(value);}" />
+                <edit-value placeholder="Preço" :valor-prop="this.produto.preco"
+                    :preencheModel="(value) => { this.produtoModal.preco = Number(value); }" />
                 <check-box label="Disponivel" :valor="this.produto.ativo ? true : false"
                     @checkbox-mudou="(ativo) => { this.produtoModal.ativo = ativo }" />
-                <edit-src TextoBotao="Imagem" />
+                <edit-src TextoBotao="Imagem" @arquivo-selecionado="(src) => { this.produtoModal.src = src }"
+                    :arquivo-inicial="null" />
                 <div class="botoes">
                     <botao-basico text="Confirmar" :acao="confirmar" />
-                    <botao-basico text="Cancelar" tipo="is-danger" :acao="() => { }" />
+                    <botao-basico text="Cancelar" tipo="is-danger" :acao="() => { this.fechar() }" />
                 </div>
             </div>
         </div>
     </section>
+    <view-alerta-geral :mensagem="this.menssagemAlerta" :visivel="this.exibirAlerta" :tipo="this.tipoAlerta" />
 </template>
 
 <script>
@@ -26,6 +28,7 @@ import CheckBox from '../edits/CheckBox.vue';
 import BotaoBasico from '../botao/BotaoBasico.vue';
 import EditSrc from '../edits/EditSRC.vue';
 import api from '@/api';
+import ViewAlertaGeral from '../views/ViewAlertaGeral.vue';
 
 export default {
     components: {
@@ -33,7 +36,8 @@ export default {
         EditValue,
         CheckBox,
         BotaoBasico,
-        EditSrc
+        EditSrc,
+        ViewAlertaGeral
     },
     props: {
         produto: {
@@ -47,7 +51,10 @@ export default {
     },
     data() {
         return {
-            produtoModal: {}
+            produtoModal: {},
+            menssagemAlerta: '',
+            tipoAlerta: 'is-success',
+            exibirAlerta: false
         }
     },
     watch: {
@@ -60,28 +67,46 @@ export default {
     },
     methods: {
         confirmar() {
-            if (this.produtoModal.id) {
-                api.put(`/product/${this.produtoModal.id}`, this.produtoModal)
-                    .then(() => {
-                        console.log('Produto atualizado com sucesso');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            } else {
-                console.log(this.produtoModal)
-                api.post('/product', this.produtoModal)
-                    .then(() => {
-                        console.log('Produto cadastrado com sucesso');
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+            if (this.produtoModal.src === undefined) {
+                this.mostrarAlerta('Selecione uma imagem', 'is-danger', false);
+                return;
+            }
+            if (this.produtoModal.ativo === undefined) {
+                this.produtoModal.ativo = false;
             }
 
+            console.log(this.produtoModal);            
+            if (this.produtoModal.id) {
+                api.put(`/products/${this.produtoModal.id}`, this.produtoModal)
+                    .then((t) => {
+                        console.log(t);
+                        this.mostrarAlerta('Produto atualizado com sucesso', 'is-success');
+                    })
+                    .catch(() => {
+                        this.mostrarAlerta('Erro ao atualizar produto', 'is-danger', false);
+                    });
+            } else {
+                api.post('/products', this.produtoModal)
+                    .then(() => {
+                        this.mostrarAlerta('Produto cadastrado com sucesso', 'is-success');
+                    })
+                    .catch(() => {
+                        this.mostrarAlerta('Erro ao cadastrar produto', 'is-danger', false);
+                    });
+            }
         },
         cancelar() {
-            this.$emit('cancelar');
+            this.fechar();
+        },
+        mostrarAlerta(mensagem, tipo, fechar = true) {
+            this.menssagemAlerta = mensagem;
+            this.tipoAlerta = tipo;
+            this.exibirAlerta = true;
+            setTimeout(() => {
+                this.exibirAlerta = false;
+                if (fechar)
+                    this.fechar();
+            }, 1500);
         }
     }
 }

@@ -35,18 +35,23 @@
         type: String,
         default: "Preço"
       },
-      valorProduto: {
+      valorProp: {
         type: Number,
         default: 0
       }
     },
     watch: {
       valor() {
-        this.preencheModel(this.valor);
+        let valor = this.valor.replace(/\D/g, '') / 100;        
+        
+        this.preencheModel(valor);
       },
       valorProduto() {
         this.valor = this.valorProduto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       }
+    },
+    mounted() {
+      this.valor = this.valorProp.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
   }
   </script>

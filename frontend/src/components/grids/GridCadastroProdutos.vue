@@ -13,10 +13,10 @@
         <tbody>
             <tr class="linha" v-for="produto in produtos" :key="produto.id" :produto="produto">
                 <td class="td-image">
-                    <view-imagem-tabela />
+                    <view-imagem-tabela :imagem="produto.src"/>
                 </td>
                 <td class="td-50px">
-                    <view-disponibilidade :disponivel="produto.available" />
+                    <view-disponibilidade :disponivel="(produto.ativo ==  0) ? false : true" />
                 </td>
                 <td>{{ produto.name }}</td>
                 <td>{{ numeroPreco(produto.preco) }}</td>

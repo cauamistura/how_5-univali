@@ -22,7 +22,7 @@ export default {
     props: {
         disponivel: {
             type: Boolean,
-            default: true
+            required: true
         }
     },
     methods: {
@@ -32,7 +32,7 @@ export default {
     },
     created() {
         window.addEventListener('resize', this.verificarTela);
-        this.verificarTela();
+        this.verificarTela();        
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.verificarTela);

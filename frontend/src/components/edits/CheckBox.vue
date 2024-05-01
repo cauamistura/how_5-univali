@@ -13,7 +13,10 @@
   export default {
     props: {
       label: String,
-      valor: Boolean
+      valor: {
+        type: Boolean,
+        default: null
+      }
     },
     data() {
       return {
@@ -24,6 +27,10 @@
       emitirEvento() {
         this.$emit('checkbox-mudou', this.isChecked);
       }
+    },
+    mounted() {      
+      if (this.valor === null)
+        this.$emit('checkbox-mudou', false);
     }
   }
   </script>

@@ -37,6 +37,9 @@ export default {
         texto() {
             this.model = this.texto;                        
         }
+    },
+    mounted() {
+        this.model = this.texto;
     }
 }
 </script>
