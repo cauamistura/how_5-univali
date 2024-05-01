@@ -74,12 +74,13 @@ export default {
             if (this.produtoModal.ativo === undefined) {
                 this.produtoModal.ativo = false;
             }
-
-            console.log(this.produtoModal);            
+            if (this.produtoModal.preco === undefined) {
+                this.produtoModal.preco = 0;
+            }
+     
             if (this.produtoModal.id) {
                 api.put(`/products/${this.produtoModal.id}`, this.produtoModal)
-                    .then((t) => {
-                        console.log(t);
+                    .then(() => {                        
                         this.mostrarAlerta('Produto atualizado com sucesso', 'is-success');
                     })
                     .catch(() => {
@@ -141,4 +142,100 @@ export default {
     box-shadow: 0px 3px 4px rgba(0, 0, 0, .1), 0px 4px 10px rgba(0, 0, 0, .2);
     cursor: pointer;
 }
+
+.modal::before {
+    content: "";
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, .5);
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 80px;
+}
+
+.modal_container {
+    position: relative;
+
+    z-index: 1;
+    display: grid;
+    align-items: end;
+    grid-gap: 50px;
+    padding: 50px 50px 50px 0;
+    animation: fadeIn .3s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(50px, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0px, 0, 0);
+    }
+}
+
+.modal_fechar {
+    border-radius: 50%;
+    border: 2px solid #000;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1rem;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, .1), 0px 4px 10px rgba(0, 0, 0, .2);
+    cursor: pointer;
+}
+
+.modal_img {
+    grid-column: 1;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, .1), 0px 4px 10px rgba(0, 0, 0, .2);
+}
+
+.modal_img img {
+    max-width: 300px;
+    display: block;
+}
+
+.modal_dados {
+    grid-column: 2;
+    max-width: 600px;
+}
+
+.modal_titulo {
+    font-size: 3rem;
+}
+
+.modal_btn {
+    margin-top: 80px;
+    background: #000;
+    cursor: pointer;
+    color: #ffffff;
+    border: none;
+    font-size: 1rem;
+    padding: 10px 25px;
+    font-family: "Noto Serif";
+}
+
+.modal_btn.esgotado {
+    background: #808080;
+}
+
+.modal_btn:active {
+    background: #808080;
+}
+
 </style>

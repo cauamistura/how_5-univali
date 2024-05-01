@@ -24,7 +24,11 @@ export default {
             selectedOption: null
         };
     },
-    
+    watch: {
+        selectedOption() {
+            this.$emit('input', (this.selectedOption === 'Vendas' ? 0 : 1));
+        }
+    }
 };
 </script>
 

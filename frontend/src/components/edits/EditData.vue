@@ -52,8 +52,7 @@ export default {
 
             if (!isNaN(newDate.getTime())) {
                 this.date = newDate;
-                // Você pode emitir um evento para notificar o componente pai sobre a alteração da data
-                // this.$emit('date-updated', this.date);
+                this.$emit('date-updated', this.date);
             } else {
                 // Tratar erro de data inválida, se necessário
                 console.error('Data inválida');

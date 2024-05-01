@@ -11,20 +11,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="linha" v-for="produto in produtos" :key="produto.id" :produto="produto">
+            <tr class="linha" v-for="produto in dados" :key="produto.id" :produto="produto">
                 <td class="td-image">
                     <view-imagem-tabela />
                 </td>
                 <td class="td-50px">
-                    <view-vendedor :vendedor="produto.user" />
+                    <view-vendedor :vendedor="produto.vendedor" />
                 </td>
                 <td>{{ produto.name }}</td>
-                <td>{{ PrecoFormatado(produto.price) }}</td>
+                <td>{{ PrecoFormatado(produto.preco) }}</td>
                 <td>
-                    <edit-numero />
+                    <edit-numero @input="(n) => { produto.quantidade = n }" />
                 </td>
                 <td class="td-50px">
-                    <botao-basico class="botao-td" :text="textoBotao" tipo="is-link" />
+                    <botao-basico class="botao-td" :text="textoBotao" tipo="is-link" @click="adicionar(produto)" />
                 </td>
             </tr>
         </tbody>
@@ -47,41 +47,13 @@ export default {
     data() {
         return {
             textoBotao: "Adicionar",
-            produtos: [
-                {
-                    id: 1,
-                    name: "Coxinha",
-                    price: 5.00,
-                    available: false,
-                    user: {
-                        id: 1,
-                        name: "João",
-                        description: "Vendedor"
-                    }
-                },
-                {
-                    id: 2,
-                    name: "Pastel",
-                    price: 3.00,
-                    available: true,
-                    user: {
-                        id: 2,
-                        name: "Maria",
-                        description: "Vendedora"
-                    }
-                },
-                {
-                    id: 3,
-                    name: "Pão de queijo",
-                    price: 2.00,
-                    available: true,
-                    user: {
-                        id: 3,
-                        name: "José",
-                        description: "Vendedor"
-                    }
-                }
-            ]
+            produtosGrid: []
+        }
+    },
+    props: {
+        dados: {
+            type: Array,
+            default: () => []
         }
     },
     methods: {
@@ -90,6 +62,14 @@ export default {
         },
         verificarTela() {
             this.textoBotao = window.innerWidth >= 768 ? "Adicionar" : "✔";
+        },
+        adicionar(produto) {
+            let pedido = {
+                'product_id': produto.id,
+                'quantity': produto.quantidade
+            };
+
+            this.$emit('adicionar', pedido);
         }
     },
     created() {
@@ -98,7 +78,7 @@ export default {
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.verificarTela);
-    },
+    }
 }
 </script>
 

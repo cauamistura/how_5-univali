@@ -1,46 +1,55 @@
 <template>
     <div class="container-home container-pai">
-        <div class="tabs is-small">
-            <ul>
-                <li :class="{ 'is-active': activeTab === Tab.Disponivel }" @click="changeTab(Tab.Disponivel)">
-                    <a>Disponivel</a></li>
-                <li :class="{ 'is-active': activeTab === Tab.Indisponivel }" @click="changeTab(Tab.Indisponivel)">
-                    <a>Indisponivel</a></li>
-                <li :class="{ 'is-active': activeTab === Tab.Todos }" @click="changeTab(Tab.Todos)"><a>Todos</a></li>
-            </ul>
-        </div>
-        <grid-home-produtos :filtro="activeTab" :dados="this.produtos"/>
+        <grid-home-produtos :filtro="activeTab" :dados="produtos" @adicionar="salvarPedido" />
     </div>
+    <view-alerta-geral :mensagem="this.menssagemAlerta" :visivel="this.exibirAlerta" :tipo="this.tipoAlerta" />
 </template>
 
 <script>
 import GridHomeProdutos from '@/components/grids/GridHomeProdutos.vue';
-
-const Tab = {
-    Disponivel: 'Disponivel',
-    Indisponivel: 'Indisponivel',
-    Todos: 'Todos'
-};
+import ViewAlertaGeral from '@/components/views/ViewAlertaGeral.vue';
+import api from '@/api';
 
 export default {
     components: {
-        GridHomeProdutos
+        GridHomeProdutos,
+        ViewAlertaGeral
     },
     data() {
         return {
-            activeTab: Tab.Disponivel,
-            produtos: []
+            produtos: [],
+            menssagemAlerta: '',
+            tipoAlerta: 'is-success',
+            exibirAlerta: false
         };
     },
     methods: {
         changeTab(tab) {
             this.activeTab = tab;
+        },
+        getProdutos() {
+            api.get('/products', {'ativo':true}).then(response => {
+                this.produtos = response.data.Produto;
+            });
+        },
+        salvarPedido(pedido) {
+            api.post('/orders', pedido).then(() => {
+                this.mostrarAlerta('Pedido salvo com sucesso', 'is-success');
+            }).catch(() => {
+                this.mostrarAlerta('Erro ao salvar pedido', 'is-danger');
+            })
+        },
+        mostrarAlerta(mensagem, tipo) {
+            this.menssagemAlerta = mensagem;
+            this.tipoAlerta = tipo;
+            this.exibirAlerta = true;
+            setTimeout(() => {
+                this.exibirAlerta = false;
+            }, 1500);
         }
     },
-    computed: {
-        Tab() {
-            return Tab;
-        }
+    created() {
+        this.getProdutos();
     }
 };
 </script>

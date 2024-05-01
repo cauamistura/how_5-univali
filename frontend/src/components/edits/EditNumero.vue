@@ -26,6 +26,11 @@ export default {
                 this.numero--;
             }
         }
+    },
+    watch: {
+        numero() {
+            this.$emit('input', this.numero);
+        }
     }
 }
 </script>
