@@ -1,11 +1,29 @@
 <template>
-    <div class="card">
+    <div class="card" id="card">
         <div class="card-image">
             <figure class="image is-4by3">
                 <img src="https://bulma.io/assets/images/placeholders/1280x960.png" alt="Placeholder image" />
             </figure>
         </div>
-        <div class="card-content">
+        <div class="card-content" id="card-content">
+            <div class="media">
+                <div class="media-content">
+                    <p class="title is-4">Nosso projeto</p>
+                </div>
+            </div>
+
+            <div class="content">
+                <p>O projeto consiste em desenvolver uma plataforma digital para uma vendinha solitária, voltada para vendedores autônomos que desejam comercializar seus produtos de forma simples e eficiente. O público-alvo são vendedores individuais que possuem produtos diversos para oferecer aos consumidores locais. A plataforma visa proporcionar uma experiência de compra conveniente e acessível aos clientes, permitindo-lhes selecionar os produtos desejados, realizar a compra e retirar os itens no local da vendinha.</p>
+            </div>
+        </div>
+    </div>
+    <div class="card" id="card">
+        <div class="card-image">
+            <figure class="image is-4by3">
+                <img src="https://bulma.io/assets/images/placeholders/1280x960.png" alt="Placeholder image" />
+            </figure>
+        </div>
+        <div class="card-content" id="card-content">
             <div class="media">
                 <div class="media-left">
                     <figure class="image is-48x48">
@@ -31,13 +49,13 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-image">
+    <div class="card" id="card">
+        <div class="card-image" id="card-content">
             <figure class="image is-4by3">
                 <img src="https://bulma.io/assets/images/placeholders/1280x960.png" alt="Placeholder image" />
             </figure>
         </div>
-        <div class="card-content">
+        <div class="card-content" id="card-content">
             <div class="media">
                 <div class="media-left">
                     <figure class="image is-48x48">
@@ -69,4 +87,11 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+    #card {
+        background-color: white;
+    }
+    #card-content {
+        background-color: rgb(15, 84, 194);
+    }
+</style>
