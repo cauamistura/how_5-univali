@@ -9,7 +9,7 @@
                     :preencheModel="(value) => { this.produtoModal.preco = Number(value); }" />
                 <check-box label="Disponivel" :valor="this.produto.ativo ? true : false"
                     @checkbox-mudou="(ativo) => { this.produtoModal.ativo = ativo }" />
-                <edit-src @arquivo-selecionado="atualizarModelo" />
+                <edit-src @arquivo-selecionado="atualizarModelo" v-if="false" />
                 <div class="botoes">
                     <botao-basico text="Confirmar" :acao="confirmar" />
                     <botao-basico text="Cancelar" tipo="is-danger" :acao="() => { this.fechar() }" />
@@ -17,7 +17,6 @@
             </div>
         </div>
     </section>
-    <view-alerta-geral :mensagem="this.menssagemAlerta" :visivel="this.exibirAlerta" :tipo="this.tipoAlerta" />
 </template>
 
 <script>
@@ -27,7 +26,6 @@ import CheckBox from '../edits/CheckBox.vue';
 import BotaoBasico from '../botao/BotaoBasico.vue';
 import EditSrc from '../edits/EditSRC.vue';
 import api from '@/api';
-import ViewAlertaGeral from '../views/ViewAlertaGeral.vue';
 
 export default {
     components: {
@@ -36,7 +34,6 @@ export default {
         CheckBox,
         BotaoBasico,
         EditSrc,
-        ViewAlertaGeral
     },
     props: {
         produto: {
@@ -51,9 +48,6 @@ export default {
     data() {
         return {
             produtoModal: {},
-            menssagemAlerta: '',
-            tipoAlerta: 'is-success',
-            exibirAlerta: false,
             src: ''
         }
     },
@@ -67,10 +61,8 @@ export default {
     },
     methods: {
         confirmar() {
-            if (this.produtoModal.src === undefined) {
-                this.mostrarAlerta('Selecione uma imagem', 'is-danger', false);
-                return;
-            }
+            this.produtoModal.src = '';
+
             if (this.produtoModal.ativo === undefined) {
                 this.produtoModal.ativo = false;
             }
@@ -100,17 +92,14 @@ export default {
             this.fechar();
         },
         mostrarAlerta(mensagem, tipo, fechar = true) {
-            this.menssagemAlerta = mensagem;
-            this.tipoAlerta = tipo;
-            this.exibirAlerta = true;
+            this.$store.dispatch('mostrarAlerta', {
+                mensagem: mensagem,
+                tipo: tipo
+            });
             setTimeout(() => {
-                this.exibirAlerta = false;
                 if (fechar)
                     this.fechar();
             }, 1500);
-        },
-        atualizarModelo(file) {
-            this.produtoModal.src = URL.createObjectURL(file);
         }
     }
 }

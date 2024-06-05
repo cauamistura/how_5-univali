@@ -13,7 +13,8 @@
     "vue": "^3.2.13",
     "vue-axios": "^3.5.2",
     "vue-cookies": "^1.8.4",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

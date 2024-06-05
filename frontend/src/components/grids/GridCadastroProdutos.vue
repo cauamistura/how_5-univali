@@ -2,7 +2,7 @@
     <table class="table is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
             <tr style="font-size: 14px;">
-                <th></th>
+                <!-- <th></th> -->
                 <th></th>
                 <th>Nome</th>
                 <th>Preço</th>
@@ -12,9 +12,9 @@
         </thead>
         <tbody>
             <tr class="linha" v-for="produto in produtos" :key="produto.id" :produto="produto">
-                <td class="td-image">
+                <!-- <td class="td-image">
                     <view-imagem-tabela :imagem="produto.src"/>
-                </td>
+                </td> -->
                 <td class="td-50px">
                     <view-disponibilidade :disponivel="(produto.ativo ==  0) ? false : true" />
                 </td>
@@ -35,13 +35,13 @@
 </template>
 
 <script>
-import ViewImagemTabela from '@/components/views/ViewImagemTabela.vue';
+// import ViewImagemTabela from '@/components/views/ViewImagemTabela.vue';
 import BotaoBasico from '@/components/botao/BotaoBasico.vue';
 import ViewDisponibilidade from '../views/ViewDisponibilidade.vue';
 
 export default {
     components: {
-        ViewImagemTabela,
+        // ViewImagemTabela,
         BotaoBasico,
         ViewDisponibilidade
     },

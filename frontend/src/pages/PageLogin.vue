@@ -15,14 +15,12 @@
       </div>
     </div>
   </div>
-  <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" />
 </template>
 
 <script>
 import BotaoBasico from "../components/botao/BotaoBasico.vue";
 import EditEmail from "../components/edits/EditEmail.vue";
 import EditSenha from "../components/edits/EditSenha.vue";
-import AlertaGeral from "../components/views/ViewAlertaGeral.vue";
 
 import api from "../api.js";
 
@@ -31,34 +29,29 @@ export default {
     return {
       email: "",
       senha: "",
-      alerta: false,
-      alertaMensagem: ""
     }
   },
   components: {
     EditEmail,
     EditSenha,
     BotaoBasico,
-    AlertaGeral
   },
   methods: {
     logar() {
-      api.post("/login", {
+      let request = {
         email: this.email,
         password: this.senha
-      }).then((response) => {
+      };      
+
+      api.post("/login", request).then((response) => {
         this.$cookies.set("token", response.data.token);
         window.location.href = "/";
       }).catch((error) => {
-        if (error.response.status == 422) {
-          this.alertaMensagem = "Email ou senha inválidos";
-        } else {
-          this.alertaMensagem = error.response.data.error;
-        }
-        this.alerta = true;
-        setTimeout(() => {
-          this.alerta = false;
-        }, 2000);
+        let mensagem = error.response.status == 422 ? "Email ou senha inválidos" : error.response.data.error;
+        this.$store.dispatch('mostrarAlerta', {
+          mensagem: mensagem,
+          tipo: 'is-danger'
+        });
       });
     }
   }

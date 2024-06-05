@@ -2,7 +2,7 @@
     <table class="table is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
             <tr style="font-size: 14px;">
-                <th></th>
+                <!-- <th></th> -->
                 <th>Vendedor</th>
                 <th>Nome</th>
                 <th>Preço</th>
@@ -12,9 +12,9 @@
         </thead>
         <tbody>
             <tr class="linha" v-for="produto in dados" :key="produto.id" :produto="produto">
-                <td class="td-image">
+                <!-- <td class="td-image">
                     <view-imagem-tabela />
-                </td>
+                </td> -->
                 <td class="td-50px">
                     <view-vendedor :vendedor="produto.vendedor" />
                 </td>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import ViewImagemTabela from '@/components/views/ViewImagemTabela.vue';
+// import ViewImagemTabela from '@/components/views/ViewImagemTabela.vue';
 import ViewVendedor from '@/components/views/ViewVendedor.vue';
 import EditNumero from '@/components/edits/EditNumero.vue';
 import BotaoBasico from '@/components/botao/BotaoBasico.vue';
@@ -41,7 +41,7 @@ export default {
     components: {
         ViewVendedor,
         EditNumero,
-        ViewImagemTabela,
+        // ViewImagemTabela,
         BotaoBasico
     },
     data() {

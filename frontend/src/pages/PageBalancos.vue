@@ -54,8 +54,7 @@ export default {
             // Atualize as datas na solicitação
             this.request.start_date = startDate;
             this.request.end_date = endDate;
-
-            console.log(this.request);
+                        
             api.post('balanco/', this.request)
                 .then(response => {
                     this.dados = response.data.dados;

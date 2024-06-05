@@ -13,7 +13,12 @@
             </div>
 
             <div class="content">
-                <p>O projeto consiste em desenvolver uma plataforma digital para uma vendinha solitária, voltada para vendedores autônomos que desejam comercializar seus produtos de forma simples e eficiente. O público-alvo são vendedores individuais que possuem produtos diversos para oferecer aos consumidores locais. A plataforma visa proporcionar uma experiência de compra conveniente e acessível aos clientes, permitindo-lhes selecionar os produtos desejados, realizar a compra e retirar os itens no local da vendinha.</p>
+                <p>O projeto consiste em desenvolver uma plataforma digital para uma vendinha solitária, voltada para
+                    vendedores autônomos que desejam comercializar seus produtos de forma simples e eficiente. O
+                    público-alvo são vendedores individuais que possuem produtos diversos para oferecer aos consumidores
+                    locais. A plataforma visa proporcionar uma experiência de compra conveniente e acessível aos
+                    clientes, permitindo-lhes selecionar os produtos desejados, realizar a compra e retirar os itens no
+                    local da vendinha.</p>
             </div>
         </div>
     </div>
@@ -48,7 +53,7 @@
             </div>
         </div>
     </div>
-
+        
     <div class="card" id="card">
         <div class="card-image" id="card-content">
             <figure class="image is-4by3">
@@ -88,10 +93,12 @@ export default {
 </script>
 
 <style>
-    #card {
-        background-color: white;
-    }
-    #card-content {
-        background-color: rgb(15, 84, 194);
-    }
+#card {
+    background-color: white;
+    margin: 20px;
+}
+
+#card-content {
+    background-color: rgb(111, 155, 226);
+}
 </style>

@@ -20,7 +20,6 @@
             </div>
         </div>
     </div>
-    <alerta-geral :visivel="alerta" :mensagem="alertaMensagem" :tipo="tipoAlerta" />
 </template>
 
 <script>
@@ -28,7 +27,6 @@ import BotaoBasico from "../components/botao/BotaoBasico.vue";
 import EditEmail from "../components/edits/EditEmail.vue";
 import EditSenha from "../components/edits/EditSenha.vue";
 import EditString from "../components/edits/EditString.vue";
-import AlertaGeral from "../components/views/ViewAlertaGeral.vue";
 
 import api from "../api.js";
 
@@ -40,41 +38,36 @@ export default {
             confirmarSenha: "",
             nome: "",
             setor: "",
-            alerta: false,
-            tipoAlerta: "is-danger",
-            alertaMensagem: ""
         }
     },
     methods: {
         Cadastrar() {
             if (this.senha != this.confirmarSenha) {
-                this.alertaMensagem = "As senhas não coincidem";
-                this.alerta = true;
-
-                setTimeout(() => {
-                    this.alerta = false;
-                }, 2000);
-
+                this.$store.dispatch('mostrarAlerta', {
+                    mensagem: 'Senhas não conferem',
+                    tipo: 'is-danger'
+                });
                 return;
             }
-            api.post("/register", {
+
+            let request = {
                 email: this.email,
                 password: this.senha,
                 name: this.nome,
                 description: this.setor,
                 seller: false
-            }).then(() => {
-                this.alertaMensagem = "Cadastro realizado com sucesso";
-                this.tipoAlerta = "is-success";
-                this.alerta = true;
+            }
 
-                setTimeout(() => {
-                    window.location.href = "/";
-                }, 1000);
-
+            api.post("/register", request).then(() => {
+                this.$store.dispatch('mostrarAlerta', {
+                    mensagem: 'Cadastro realizado com sucesso',
+                    tipo: 'is-success'
+                });
             }).catch(() => {
-                this.alertaMensagem = "Erro ao cadastrar, verifique os dados e tente novamente";
-                this.alerta = true;
+                this.$store.dispatch('mostrarAlerta', {
+                    mensagem: 'Erro ao cadastrar, verifique os dados e tente novamente',
+                    tipo: 'is-danger'
+                });
             });
         }
     },
@@ -92,7 +85,6 @@ export default {
         EditEmail,
         EditSenha,
         BotaoBasico,
-        AlertaGeral,
         EditString
     }
 }

@@ -5,38 +5,43 @@
       <PageCriarConta v-else />
     </div>
     <div v-else>
-      <menu-header />
+      <MenuHeader />
       <router-view />
     </div>
   </div>
+  <ViewAlertaGeral :mensagem="mensagemAlerta" :visivel="exibirAlerta" :tipo="tipoAlerta" />
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import PageLogin from './pages/PageLogin.vue';
 import PageCriarConta from './pages/PageCriarConta.vue';
 import MenuHeader from './components/MenuHeader.vue';
+import ViewAlertaGeral from './components/views/ViewAlertaGeral.vue';
 
 export default {
   data() {
     return {
       logado: false,
-      temConta: false,
-      isLoading: false,
+      temConta: false
     }
+  },
+  computed: {
+    ...mapState(['mensagemAlerta', 'tipoAlerta', 'exibirAlerta'])
   },
   components: {
     PageLogin,
     MenuHeader,
-    PageCriarConta
+    PageCriarConta,
+    ViewAlertaGeral
   },
   mounted() {
-    // Verificar se há um token nos cookies
     const token = this.$cookies.get('token');
     this.logado = token ? true : false;
     if (!this.logado) {
       this.temConta = !window.location.href.includes('Login/CriarConta');
     }
-  },
+  }
 }
 </script>
 
