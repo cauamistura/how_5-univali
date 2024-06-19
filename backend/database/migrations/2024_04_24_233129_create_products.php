@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name');
-            $table->float('preco');
+            $table->float('price');
             $table->string('src');
-            $table->boolean('ativo');
-            $table->unsignedBigInteger('vendedor_id');
+            $table->boolean('active');
+            $table->unsignedBigInteger('seller');
             $table->timestamps();
 
-            $table->foreign('vendedor_id')->references('id')->on('users');
+            $table->foreign('seller')->references('id')->on('users');
         });
     }
 

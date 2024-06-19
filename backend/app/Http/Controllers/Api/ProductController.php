@@ -27,16 +27,17 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $produtos = Product::with('vendedor')->byActive(true)->get();
+        
+        $produtos = Product::with('seller')->byActive(true)->get();
         return response()->json([
-            "Produto" => $produtos
+            "Products" => $produtos
         ]);
     }
 
     public function show()
     {
         try {
-            return response()->json(["Produto" => $this->produto]);
+            return response()->json(["Products" => $this->produto]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -46,7 +47,7 @@ class ProductController extends Controller
     {
         try {
             $produtos = Product::byUser($this->current_user->id)->get();
-            return response()->json(["Produto" => $produtos]);
+            return response()->json(["Products" => $produtos]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -57,8 +58,8 @@ class ProductController extends Controller
         // Valida os dados do formulário
         $request->validate([
             'name' => 'required|string|max:255',
-            'preco' => 'required|numeric',            
-            'ativo' => 'required|boolean'
+            'price' => 'required|numeric',            
+            'active' => 'required|boolean'
         ]);
 
         $this->updateFile($request->hasFile('image'));
@@ -70,10 +71,10 @@ class ProductController extends Controller
             // Insere o novo produto na tabela 'products' (não 'Products')
             DB::table('products')->insert([
                 'name' => $request->name,
-                'preco' => $request->preco,
+                'price' => $request->price,
                 'src' => $this->fileName,
-                'ativo' => $request->ativo,
-                'vendedor_id' => $this->current_user->id,
+                'active' => $request->active,
+                'seller' => $this->current_user->id,
                 'created_at' => now(),
             ]);
 
@@ -91,25 +92,26 @@ class ProductController extends Controller
         // Valida os dados do formulário
         $request->validate([
             'name' => 'string|max:255',
-            'preco' => 'numeric',
-            'ativo' => 'boolean',
+            'price' => 'numeric',
+            'active' => 'boolean',
         ]);
 
         $this->updateFile($request->hasFile('image'));
 
         try {
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($this->current_user->id != $this->produto->vendedor_id) {
+            if ($this->current_user->id != $this->produto->seller) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
 
             $this->produto->name = $request->name;
-            $this->produto->preco = $request->preco;
+            $this->produto->price = $request->price;
             $this->produto->src = $this->fileName;
-            $this->produto->ativo = $request->ativo;
-            $this->produto->vendedor_id = $this->current_user->id;
+            $this->produto->active = $request->active;
+            $this->produto->seller = $this->current_user->id;
             $this->produto->updated_at = now();
             $this->produto->save();
+
 
             return response()->json(['message' => 'Produto atualizado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
@@ -121,7 +123,7 @@ class ProductController extends Controller
     {
         try {
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
-            if ($this->current_user->id != $this->produto->vendedor_id) {
+            if ($this->current_user->id != $this->produto->seller) {
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
 

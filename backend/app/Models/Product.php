@@ -11,18 +11,18 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'preco',
+        'price',
         'src',
-        'ativo',
-        'vendedor'
+        'active',
+        'seller'
     ];
 
     public function scopeByActive($query, $status = null)
     {
         if ($status === true) {
-            return $query->where('ativo', true);
+            return $query->where('active', true);
         } elseif ($status === false) {
-            return $query->where('ativo', false);
+            return $query->where('active', false);
         }
 
         // Se nenhum valor for passado, retorne todos os registros
@@ -31,11 +31,11 @@ class Product extends Model
 
     public function scopeByUser($query, $user_id)
     {
-        return $query->where('vendedor_id', $user_id);
+        return $query->where('seller', $user_id);
     }
 
-    public function vendedor()
+    public function seller()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'seller');        
     }
 }

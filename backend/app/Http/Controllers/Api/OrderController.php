@@ -28,7 +28,7 @@ class OrderController extends Controller
             DB::beginTransaction();
 
             DB::table('orders')->insert([
-                'seller_id' => $product->vendedor->id,
+                'seller_id' => $product->seller,
                 'buyer_id' => $user->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
@@ -48,7 +48,7 @@ class OrderController extends Controller
     private function ordersByUser(Request $request, $user_id)
     {
         try {
-            $result = Order::select('orders.date as coluna1', 'products.name as coluna2', DB::raw('SUM(orders.quantity) as coluna3'), DB::raw('SUM(orders.quantity * products.preco) as coluna4'))
+            $result = Order::select('orders.date as coluna1', 'products.name as coluna2', DB::raw('SUM(orders.quantity) as coluna3'), DB::raw('SUM(orders.quantity * products.price) as coluna4'))
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->whereBetween('orders.date', [$request->start_date, $request->end_date])
                 ->where('orders.buyer_id', $user_id)
@@ -64,7 +64,7 @@ class OrderController extends Controller
     private function sallerByUser(Request $request,  $user_id)
     {
         try {
-            $result = Order::select('users.name as coluna1', 'users.email as coluna2', 'users.description as coluna3', DB::raw('SUM(products.preco * orders.quantity) as coluna4'))
+            $result = Order::select('users.name as coluna1', 'users.email as coluna2', 'users.description as coluna3', DB::raw('SUM(products.price * orders.quantity) as coluna4'))
                 ->join('users', 'orders.buyer_id', '=', 'users.id')
                 ->join('products', 'orders.product_id', '=', 'products.id')
                 ->whereBetween('orders.date', [$request->start_date, $request->end_date])
