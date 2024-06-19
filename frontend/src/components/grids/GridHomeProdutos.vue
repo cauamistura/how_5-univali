@@ -16,10 +16,10 @@
                     <view-imagem-tabela />
                 </td> -->
                 <td class="td-50px">
-                    <view-vendedor :vendedor="produto.vendedor" />
+                    <view-vendedor :vendedor="produto.seller" />
                 </td>
                 <td>{{ produto.name }}</td>
-                <td>{{ PrecoFormatado(produto.preco) }}</td>
+                <td>{{ PrecoFormatado(produto.price) }}</td>
                 <td>
                     <edit-numero @input="(n) => { produto.quantidade = n }" />
                 </td>
@@ -63,7 +63,7 @@ export default {
         verificarTela() {
             this.textoBotao = window.innerWidth >= 768 ? "Adicionar" : "✔";
         },
-        adicionar(produto) {
+        adicionar(produto) {            
             let pedido = {
                 'product_id': produto.id,
                 'quantity': produto.quantidade

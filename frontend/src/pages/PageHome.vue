@@ -16,7 +16,7 @@ export default {
         return {
             produtos: [],
             filtroAtivo: {
-                ativo: true
+                active: true
             },
         };
     },
@@ -25,8 +25,8 @@ export default {
             this.activeTab = tab;
         },
         getProdutos() {
-            api.get('/products', this.filtroAtivo).then(response => {
-                this.produtos = response.data.Produto;
+            api.get('/products', this.filtroAtivo).then(response => {                
+                this.produtos = response.data.Products;
             });
         },
         salvarPedido(pedido) {

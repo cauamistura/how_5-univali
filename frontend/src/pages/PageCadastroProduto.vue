@@ -52,7 +52,8 @@ export default {
     getProdutos() {
       api.get('/products/user')
         .then(response => {
-          this.produtos = [...response.data.Produto]; // Cria uma cópia independente da lista de produtos          
+          this.produtos = [...response.data.Products]; // Cria uma cópia independente da lista de produtos          
+          console.log(this.produtos);
         })
         .catch(error => {
           console.error(error);

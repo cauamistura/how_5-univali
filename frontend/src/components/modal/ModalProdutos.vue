@@ -5,10 +5,10 @@
                 <button @click="fechar" class="modal_fechar">X</button>
                 <edit-string placeholder="Nome" :texto="this.produto.name"
                     :preencheModel="(nome) => { this.produtoModal.name = nome }" />
-                <edit-value placeholder="Preço" :valor-prop="this.produto.preco"
-                    :preencheModel="(value) => { this.produtoModal.preco = Number(value); }" />
-                <check-box label="Disponivel" :valor="this.produto.ativo ? true : false"
-                    @checkbox-mudou="(ativo) => { this.produtoModal.ativo = ativo }" />
+                <edit-value placeholder="Preço" :valor-prop="this.produto.price"
+                    :preencheModel="(value) => { this.produtoModal.price = Number(value); }" />
+                <check-box label="Disponivel" :valor="this.produto.active ? true : false"
+                    @checkbox-mudou="(ativo) => { this.produtoModal.active = ativo }" />
                 <edit-src @arquivo-selecionado="atualizarModelo" v-if="false" />
                 <div class="botoes">
                     <botao-basico text="Confirmar" :acao="confirmar" />
@@ -63,13 +63,14 @@ export default {
         confirmar() {
             this.produtoModal.src = '';
 
-            if (this.produtoModal.ativo === undefined) {
-                this.produtoModal.ativo = false;
+            if (this.produtoModal.active === undefined) {
+                this.produtoModal.active = false;
             }
-            if (this.produtoModal.preco === undefined) {
-                this.produtoModal.preco = 0;
+            if (this.produtoModal.price === undefined) {
+                this.produtoModal.price = 0;
             }
 
+            console.log(this.produtoModal);
             if (this.produtoModal.id) {
                 api.put(`/products/${this.produtoModal.id}`, this.produtoModal)
                     .then(() => {
