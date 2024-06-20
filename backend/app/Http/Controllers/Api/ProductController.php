@@ -27,7 +27,6 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        
         $produtos = Product::with('seller')->byActive(true)->get();
         return response()->json([
             "Products" => $produtos
@@ -62,17 +61,30 @@ class ProductController extends Controller
             'active' => 'required|boolean'
         ]);
 
-        $this->updateFile($request->hasFile('image'));
+        if($request->hasFile('img_product')){
+            // Get filename with the extension
+            $filenameWithExt = $request->file('img_product')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('img_product')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('img_product')->storeAs('public/img_products', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.png';
+        }
   
         try {
             // Inicia uma transação
             DB::beginTransaction();
             
-            // Insere o novo produto na tabela 'products' (não 'Products')
+            // Insere um produto na tabela 'products'
             DB::table('products')->insert([
                 'name' => $request->name,
                 'price' => $request->price,
-                'src' => $this->fileName,
+                'img_product' => $fileNameToStore,
                 'active' => $request->active,
                 'seller' => $this->current_user->id,
                 'created_at' => now(),
@@ -96,7 +108,20 @@ class ProductController extends Controller
             'active' => 'boolean',
         ]);
 
-        $this->updateFile($request->hasFile('image'));
+        if($request->hasFile('img_product')){
+            // Get filename with the extension
+            $filenameWithExt = $request->file('img_product')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just ext
+            $extension = $request->file('img_product')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            // Upload Image
+            $path = $request->file('img_product')->storeAs('public/img_products', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.png';
+        }
 
         try {
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
@@ -106,19 +131,18 @@ class ProductController extends Controller
 
             $this->produto->name = $request->name;
             $this->produto->price = $request->price;
-            $this->produto->src = $this->fileName;
+            $this->produto->img_product = $fileNameToStore;
             $this->produto->active = $request->active;
             $this->produto->seller = $this->current_user->id;
             $this->produto->updated_at = now();
             $this->produto->save();
-
 
             return response()->json(['message' => 'Produto atualizado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
+    
     public function delete()
     {
         try {
@@ -132,17 +156,6 @@ class ProductController extends Controller
             return response()->json(['message' => 'Produto deletado com sucesso'], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    private function updateFile($image)
-    {
-        if ($image) {
-            $file = $image;
-            $this->fileName = md5(time()) . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/images'), $this->fileName);
-        } else {
-            $this->fileName = 'default-image.png';
         }
     }
 }

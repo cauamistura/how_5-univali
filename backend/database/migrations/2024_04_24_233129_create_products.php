@@ -17,7 +17,7 @@ return new class extends Migration
             $table->smallIncrements('id');
             $table->string('name');
             $table->float('price');
-            $table->string('src');
+            $table->string('img_product');
             $table->boolean('active');
             $table->unsignedBigInteger('seller');
             $table->timestamps();
