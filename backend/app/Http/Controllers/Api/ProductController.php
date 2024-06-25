@@ -58,24 +58,14 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',            
-            'active' => 'required|boolean'
+            'active' => 'required',
+            'image' => [
+                'nullable',
+                'image',
+                'max:2048'
+            ]
         ]);
 
-        if($request->hasFile('img_product')){
-            // Get filename with the extension
-            $filenameWithExt = $request->file('img_product')->getClientOriginalName();
-            // Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
-            $extension = $request->file('img_product')->getClientOriginalExtension();
-            // Filename to store
-            $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            // Upload Image
-            $path = $request->file('img_product')->storeAs('public/img_products', $fileNameToStore);
-        } else {
-            $fileNameToStore = 'noimage.png';
-        }
-  
         try {
             // Inicia uma transação
             DB::beginTransaction();
@@ -84,8 +74,8 @@ class ProductController extends Controller
             DB::table('products')->insert([
                 'name' => $request->name,
                 'price' => $request->price,
-                'img_product' => $fileNameToStore,
-                'active' => $request->active,
+                'image' => $request->file('image')->store('images', 'public'),
+                'active' => $request->boolean('active'),
                 'seller' => $this->current_user->id,
                 'created_at' => now(),
             ]);
@@ -103,25 +93,15 @@ class ProductController extends Controller
     {
         // Valida os dados do formulário
         $request->validate([
-            'name' => 'string|max:255',
-            'price' => 'numeric',
-            'active' => 'boolean',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',            
+            'active' => 'required',
+            'image' => [
+                'nullable',
+                'image',
+                'max:2048'
+            ]
         ]);
-
-        if($request->hasFile('img_product')){
-            // Get filename with the extension
-            $filenameWithExt = $request->file('img_product')->getClientOriginalName();
-            // Get just filename
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just ext
-            $extension = $request->file('img_product')->getClientOriginalExtension();
-            // Filename to store
-            $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            // Upload Image
-            $path = $request->file('img_product')->storeAs('public/img_products', $fileNameToStore);
-        } else {
-            $fileNameToStore = 'noimage.png';
-        }
 
         try {
             // Verifica se o usuário autenticado corresponde ao usuário que está sendo atualizado
@@ -131,7 +111,7 @@ class ProductController extends Controller
 
             $this->produto->name = $request->name;
             $this->produto->price = $request->price;
-            $this->produto->img_product = $fileNameToStore;
+            $this->produto->image = $request->file('image')->store('images', 'public'),
             $this->produto->active = $request->active;
             $this->produto->seller = $this->current_user->id;
             $this->produto->updated_at = now();
