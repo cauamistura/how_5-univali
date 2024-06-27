@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -111,7 +112,16 @@ class ProductController extends Controller
 
             $this->produto->name = $request->name;
             $this->produto->price = $request->price;
-            $this->produto->image = $request->file('image')->store('images', 'public'),
+            
+            if ($request->hasFile('image')) {
+                if ($this->produto->image) {
+                    // Deleta a imagem antiga
+                    Storage::disk('public')->delete($this->produto->image);
+                }
+                // Salva a nova imagem
+                $this->produto->image = $request->file('image')->store('images', 'public');
+            }
+
             $this->produto->active = $request->active;
             $this->produto->seller = $this->current_user->id;
             $this->produto->updated_at = now();
