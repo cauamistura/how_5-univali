@@ -48,6 +48,7 @@ export default {
     fecharModal() {
       this.produto = null;
       this.getProdutos();
+      window.location.reload();
     },
     getProdutos() {
       api.get('/products/user')

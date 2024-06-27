@@ -49,7 +49,9 @@ export default {
     },
     fechar: {
       type: Function,
-      default: () => {}
+      default: () => {
+        window.location.reload();
+      }
     }
   },
   data() {
@@ -84,7 +86,7 @@ export default {
       formData.append('active', this.produtoModal.active);
     
       const request = this.produtoModal.id 
-        ? api.put(`/products/${this.produtoModal.id}`, formData)
+        ? api.post(`/products/${this.produtoModal.id}`, formData)
         : api.post('/products', formData);
 
       request
