@@ -70,13 +70,15 @@ class ProductController extends Controller
         try {
             // Inicia uma transação
             DB::beginTransaction();
+
+            $activeBoolean = filter_var($request->active, FILTER_VALIDATE_BOOLEAN);
             
             // Insere um produto na tabela 'products'
             DB::table('products')->insert([
                 'name' => $request->name,
                 'price' => $request->price,
                 'image' => $request->file('image')->store('images', 'public'),
-                'active' => $request->boolean('active'),
+                'active' =>  $activeBoolean,
                 'seller' => $this->current_user->id,
                 'created_at' => now(),
             ]);
@@ -110,6 +112,8 @@ class ProductController extends Controller
                 return response()->json(['error' => 'Você não tem permissão para atualizar este produto'], Response::HTTP_FORBIDDEN);
             }
 
+            $activeBoolean = filter_var($request->active, FILTER_VALIDATE_BOOLEAN);
+
             $this->produto->name = $request->name;
             $this->produto->price = $request->price;
             
@@ -122,7 +126,7 @@ class ProductController extends Controller
                 $this->produto->image = $request->file('image')->store('images', 'public');
             }
 
-            $this->produto->active = $request->active;
+            $this->produto->active = $activeBoolean;
             $this->produto->seller = $this->current_user->id;
             $this->produto->updated_at = now();
             $this->produto->save();
