@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api', // URL base da sua API
   timeout: 5000, // Tempo limite para as requisições (em milissegundos)
   headers: {
-    'Content-Type': 'application/json', // Tipo de conteúdo das requisições
+    'Content-Type': 'multipart/form-data', // Tipo de conteúdo das requisições
     'Authorization': 'Bearer ' + VueCookies.get('token'), // Token de autenticação
   },
 });

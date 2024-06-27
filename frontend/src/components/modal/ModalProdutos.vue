@@ -1,22 +1,31 @@
 <template>
-    <section class="modal form" v-if="this.produto">
-        <div class="modal_container">
-            <div class="modal_dados">
-                <button @click="fechar" class="modal_fechar">X</button>
-                <edit-string placeholder="Nome" :texto="this.produto.name"
-                    :preencheModel="(nome) => { this.produtoModal.name = nome }" />
-                <edit-value placeholder="Preço" :valor-prop="this.produto.price"
-                    :preencheModel="(value) => { this.produtoModal.price = Number(value); }" />
-                <check-box label="Disponivel" :valor="this.produto.active ? true : false"
-                    @checkbox-mudou="(ativo) => { this.produtoModal.active = ativo }" />
-                <edit-src @arquivo-selecionado="atualizarModelo" v-if="false" />
-                <div class="botoes">
-                    <botao-basico text="Confirmar" :acao="confirmar" />
-                    <botao-basico text="Cancelar" tipo="is-danger" :acao="() => { this.fechar() }" />
-                </div>
-            </div>
+  <section class="modal form" v-if="produto">
+    <div class="modal_container">
+      <div class="modal_dados">
+        <button @click="fechar" class="modal_fechar">X</button>
+        <edit-string 
+          placeholder="Nome" 
+          :texto="produtoModal.name"
+          :preencheModel="(nome) => { produtoModal.name = nome }" 
+        />
+        <edit-value 
+          placeholder="Preço" 
+          :valor-prop="produtoModal.price"
+          :preencheModel="(value) => { produtoModal.price = Number(value); }" 
+        />
+        <check-box 
+          label="Disponível" 
+          :valor="produtoModal.active ? true : false"
+          @checkbox-mudou="(ativo) => { produtoModal.active = ativo }" 
+        />
+        <input @change='newFile' type="file">
+        <div class="botoes">
+          <botao-basico text="Confirmar" :acao="confirmar" />
+          <botao-basico text="Cancelar" tipo="is-danger" :acao="fechar" />
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -24,92 +33,96 @@ import EditString from '../edits/EditString.vue';
 import EditValue from '../edits/EditValue.vue';
 import CheckBox from '../edits/CheckBox.vue';
 import BotaoBasico from '../botao/BotaoBasico.vue';
-import EditSrc from '../edits/EditSRC.vue';
 import api from '@/api';
 
 export default {
-    components: {
-        EditString,
-        EditValue,
-        CheckBox,
-        BotaoBasico,
-        EditSrc,
+  components: {
+    EditString,
+    EditValue,
+    CheckBox,
+    BotaoBasico
+  },
+  props: {
+    produto: {
+      type: Object,
+      default: null
     },
-    props: {
-        produto: {
-            type: Object,
-            default: null
-        },
-        fechar: {
-            type: Function,
-            default: () => { }
-        }
-    },
-    data() {
-        return {
-            produtoModal: {},
-            src: ''
-        }
-    },
-    watch: {
-        produto() {
-            this.produtoModal = this.produto;
-        }
-    },
-    mounted() {
-        this.produtoModal = this.produto;
-    },
-    methods: {
-        confirmar() {
-            this.produtoModal.src = '';
-
-            if (this.produtoModal.active === undefined) {
-                this.produtoModal.active = false;
-            }
-            if (this.produtoModal.price === undefined) {
-                this.produtoModal.price = 0;
-            }
-
-            console.log(this.produtoModal);
-            if (this.produtoModal.id) {
-                api.put(`/products/${this.produtoModal.id}`, this.produtoModal)
-                    .then(() => {
-                        this.mostrarAlerta('Produto atualizado com sucesso', 'is-success');
-                    })
-                    .catch(() => {
-                        this.mostrarAlerta('Erro ao atualizar produto', 'is-danger', false);
-                    });
-            } else {
-                api.post('/products', this.produtoModal)
-                    .then(() => {
-                        this.mostrarAlerta('Produto cadastrado com sucesso', 'is-success');
-                    })
-                    .catch(() => {
-                        this.mostrarAlerta('Erro ao cadastrar produto', 'is-danger', false);
-                    });
-            }
-        },
-        cancelar() {
-            this.fechar();
-        },
-        mostrarAlerta(mensagem, tipo, fechar = true) {
-            this.$store.dispatch('mostrarAlerta', {
-                mensagem: mensagem,
-                tipo: tipo
-            });
-            setTimeout(() => {
-                if (fechar)
-                    this.fechar();
-            }, 1500);
-        }
+    fechar: {
+      type: Function,
+      default: () => {}
     }
-}
-</script>
+  },
+  data() {
+    return {
+      produtoModal: {},
+      imagemTemporaria: null,
+    }
+  },
+  watch: {
+    produto() {
+      this.produtoModal = { ...this.produto };
+    }
+  },
+  mounted() {
+    this.produtoModal = { ...this.produto };
+  },
+  methods: {
+    confirmar() {
+      // Verificação e inicialização dos campos
+      if (this.produtoModal.active === undefined) {
+        this.produtoModal.active = false;
+      }
+      if (this.produtoModal.price === undefined) {
+        this.produtoModal.price = 0;
+      }
 
+      // Criação do FormData
+      var formData = new FormData();
+      formData.append('image', this.imagemTemporaria);
+      formData.append('name', this.produtoModal.name);
+      formData.append('price', this.produtoModal.price);
+      formData.append('active', this.produtoModal.active);
+    
+      const request = this.produtoModal.id 
+        ? api.put(`/products/${this.produtoModal.id}`, formData)
+        : api.post('/products', formData);
+
+      request
+        .then(() => {
+          this.mostrarAlerta(
+            this.produtoModal.id ? 'Produto atualizado com sucesso' : 'Produto cadastrado com sucesso', 
+            'is-success'
+          );
+        })
+        .catch((error) => {
+          console.error('Erro ao enviar o produto:', error);
+          this.mostrarAlerta(
+            this.produtoModal.id ? 'Erro ao atualizar produto' : 'Erro ao cadastrar produto', 
+            'is-danger', 
+            false
+          );
+        });
+    },
+    newFile(event) {
+      console.log(event)
+      this.imagemTemporaria = event.target.files[0]
+    },
+    mostrarAlerta(mensagem, tipo, fechar = true) {
+      this.$store.dispatch('mostrarAlerta', {
+        mensagem: mensagem,
+        tipo: tipo
+      });
+      setTimeout(() => {
+        if (fechar) this.fechar();
+      }, 1500);
+    }
+  }
+};
+</script>
+  
 <style>
 .modal::before {
     content: "";
-    position: fixed;
     top: 0px;
     left: 0px;
     width: 100%;

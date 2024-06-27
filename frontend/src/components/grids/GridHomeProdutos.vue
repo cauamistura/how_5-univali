@@ -12,9 +12,9 @@
         </thead>
         <tbody>
             <tr class="linha" v-for="produto in dados" :key="produto.id" :produto="produto">
-                <!-- <td class="td-image">
-                    <view-imagem-tabela />
-                </td> -->
+                <td class="td-image">
+                    <view-imagem-tabela :imagem="produto.image"/>
+                </td>
                 <td class="td-50px">
                     <view-vendedor :vendedor="produto.seller" />
                 </td>
@@ -36,12 +36,13 @@
 import ViewVendedor from '@/components/views/ViewVendedor.vue';
 import EditNumero from '@/components/edits/EditNumero.vue';
 import BotaoBasico from '@/components/botao/BotaoBasico.vue';
+import ViewImagemTabela from '../views/ViewImagemTabela.vue';
 
 export default {
     components: {
         ViewVendedor,
         EditNumero,
-        // ViewImagemTabela,
+        ViewImagemTabela,
         BotaoBasico
     },
     data() {

@@ -15,7 +15,7 @@ export default {
     },
     data() {
         return {
-            url: this.imagem
+           url: `http://localhost:8000/storage/${this.imagem}`
         }
     },
 }

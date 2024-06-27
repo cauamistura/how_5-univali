@@ -12,9 +12,9 @@
         </thead>
         <tbody>
             <tr class="linha" v-for="produto in produtos" :key="produto.id" :produto="produto">
-                <!-- <td class="td-image">
-                    <view-imagem-tabela :imagem="produto.src"/>
-                </td> -->
+                <td class="td-image">
+                    <view-imagem-tabela :imagem="produto.image"/>
+                </td>
                 <td class="td-50px">
                     <view-disponibilidade :disponivel="(produto.active ==  0) ? false : true" />
                 </td>
@@ -38,10 +38,11 @@
 // import ViewImagemTabela from '@/components/views/ViewImagemTabela.vue';
 import BotaoBasico from '@/components/botao/BotaoBasico.vue';
 import ViewDisponibilidade from '../views/ViewDisponibilidade.vue';
+import ViewImagemTabela from '../views/ViewImagemTabela.vue';
 
 export default {
     components: {
-        // ViewImagemTabela,
+        ViewImagemTabela,
         BotaoBasico,
         ViewDisponibilidade
     },
